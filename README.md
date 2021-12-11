@@ -6,9 +6,9 @@ Pewlett Hackard is facing a 'silver tsunami' with many of it's employees nearing
 
 ## Results
 
-From the Employee and Titles files a Retirement Titles table was created to list the names, birth date, and title of current employees specifically with birth dates between 1952 and 1955 (i.e. those nearing retirment age).
+From the Employee and Titles files a Retirement Titles table was created to list the names, birth date, and title of current employees specifically with birth dates between 1952 and 1955 (i.e. those nearing retirment age). (https://github.com/hal1277/Pewlett_Hackard_Analysis/blob/main/Data/)retirement_titles.csv)
 
-This data then needed to be cleansed because duplicate lines appeared if an employee had more than one title in the time they have worked for Pewlett Hackard.  The DISTINCT ON function was used to filter to only the current title for each employee to create a Unique Titles table.  This table was then used with the GROUP BY function to create a more informative summary table by titles showing the number of employees by Title that are nearing retirmeent.  
+This data then needed to be cleansed because duplicate lines appeared if an employee had more than one title in the time they have worked for Pewlett Hackard.  The DISTINCT ON function was used to filter to only the current title for each employee to create a Unique Titles table. (https://github.com/hal1277/Pewlett_Hackard_Analysis/blob/main/Data/unique_titles.csv) This table was then used with the GROUP BY function to create a more informative summary table by titles showing the number of employees by Title that are nearing retirmeent.  
 
 | count | title              |
 |-------|--------------------|
@@ -20,7 +20,7 @@ This data then needed to be cleansed because duplicate lines appeared if an empl
 | 1761  | Assistant Engineer |
 | 4     | Manager            |
 
-With ~90,000 employees approaching retirement age Pewlett Hackard knows they need to make a plan for this large transition so they asked for information on employees eligible for a mentorship program.  They asked to see the employees born in 1965 that could be mentored to replace the employees that will retire. This prdouced a list of ~1,500 employees in the table Mentorship Eligibility.
+With ~90,000 employees approaching retirement age Pewlett Hackard knows they need to make a plan for this large transition so they asked for information on employees eligible for a mentorship program.  They asked to see the employees born in 1965 that could be mentored to replace the employees that will retire. This prdouced a list of ~1,500 employees in the table Mentorship Eligibility. (https://github.com/hal1277/Pewlett_Hackard_Analysis/blob/main/Data/membership_eligibility.csv)
 
 From the analysis completed there are 4 major points seen:
 
@@ -36,11 +36,11 @@ From the analysis completed there are 4 major points seen:
 
 Hewlett Packard has ~90,000 roles that wil need to be filed as employees retire in the next couple of years.  Are there enough qualified retirment ready employees to mentor the next generation of Pewlett Hackard employees?  The answer to that question is yes.  But, based on the criteria given for the mentorship program eligibility it appears there are not enough employees to mentor.   I've added a table summarzing the Mentorship Elibility table by title so the challenge Pewlett Hackard faces is easier to visualize.  
 
-SELECT COUNT (emp_no), title
-INTO mentorship_eligibility_summary
-FROM mentorship_eligibility
-GROUP BY title
-ORDER BY COUNT (emp_no) DESC;
+	SELECT COUNT (emp_no), title
+	INTO mentorship_eligibility_summary
+	FROM mentorship_eligibility
+	GROUP BY title
+	ORDER BY COUNT (emp_no) DESC;
 
 
 
@@ -53,30 +53,30 @@ ORDER BY COUNT (emp_no) DESC;
 | 78    | Assistant Engineer |
 | 77    | Technique Leader   |
 
-Given that the provided criteria produced a far smaller list of mentorship eligible employees than the number of employees expected to retire I've created an additional analysis with broader criteria on eligibility for mentorship including anyone born between 1960 and 1969 and then summarzied that in a new table by title for easy visualiztion.  
+Given that the provided criteria produced a far smaller list of mentorship eligible employees than the number of employees expected to retire I've created an additional analysis with broader criteria on eligibility for mentorship (https://github.com/hal1277/Pewlett_Hackard_Analysis/blob/main/Data/membership_eligibility_broader.csv) including anyone born between 1960 and 1969 and then summarzied that in a new table by title for easy visualiztion.  
 
-SELECT DISTINCT ON (emp_no) employees.emp_no, 
-	employees.first_name, 
-	employees.last_name, 
-	employees.birth_date, 
-	dept_emp.from_date, 
-	dept_emp.to_date, 
-	titles.title
-INTO mentorship_eligibility_broader
-FROM employees
-INNER JOIN dept_emp 
-ON employees.emp_no = dept_emp.emp_no
-INNER JOIN titles
-ON employees.emp_no = titles.emp_no
-WHERE birth_date BETWEEN '1960-01-01' AND '1969-12-31'
-AND dept_emp.to_date = '9999-01-01'
-ORDER BY emp_no, to_date DESC;
+	SELECT DISTINCT ON (emp_no) employees.emp_no, 
+		employees.first_name, 
+		employees.last_name, 
+		employees.birth_date, 
+		dept_emp.from_date, 
+		dept_emp.to_date, 
+		titles.title
+	INTO mentorship_eligibility_broader
+	FROM employees
+	INNER JOIN dept_emp 
+	ON employees.emp_no = dept_emp.emp_no
+	INNER JOIN titles
+	ON employees.emp_no = titles.emp_no
+	WHERE birth_date BETWEEN '1960-01-01' AND '1969-12-31'
+	AND dept_emp.to_date = '9999-01-01'
+	ORDER BY emp_no, to_date DESC;
 
-SELECT COUNT (emp_no), title
-INTO mentorship_eligibility_broader_summary
-FROM mentorship_eligibility_broader
-GROUP BY title
-ORDER BY COUNT (emp_no) DESC;
+	SELECT COUNT (emp_no), title
+	INTO mentorship_eligibility_broader_summary
+	FROM mentorship_eligibility_broader
+	GROUP BY title
+	ORDER BY COUNT (emp_no) DESC;
 
 | count | title              |
 |-------|--------------------|
